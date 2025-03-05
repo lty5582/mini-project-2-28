@@ -1,0 +1,129 @@
+/* 전체 페이지 스타일 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* 컨테이너 스타일 */
+  .container {
+    width: 90%;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  /* 맛집 카드 스타일 */
+  .restaurant-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 16px;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .restaurant-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .restaurant-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  .restaurant-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+  }
+  
+  .restaurant-card p {
+    margin: 4px 0;
+    color: #555;
+  }
+  
+  /* 찜하기 버튼 */
+  button {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+  
+  button:hover {
+    background-color: #e84118;
+  }
+  
+  /* 🔹 찜한 맛집 리스트 스타일 */
+  .favorite-list {
+    background-color: #fff;
+    padding: 16px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  .favorite-list h2 {
+    font-size: 1.5rem;
+    color: #ff4757;
+  }
+  
+  .favorite-list ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .favorite-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .favorite-item:last-child {
+    border-bottom: none;
+  }
+  
+  .favorite-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-right: 12px;
+  }
+  
+  .favorite-info {
+    flex-grow: 1;
+  }
+  
+  .remove-btn {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+  }
+  
+  .remove-btn:hover {
+    background-color: #e84118;
+  }
+  
+  /* 🔹 맛집 리스트 컨테이너 */
+  .restaurant-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }

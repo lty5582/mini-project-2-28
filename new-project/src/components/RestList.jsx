@@ -1,39 +1,55 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import RestCard from "./RestCard";
-import axios from "axios";
+import { fetchRestaurants } from "../api/api";
 
-const RestList = () => {
-    const [restaurants, setRestaurants] = useState([]);
+function RestList({ onAddFavorite }) {
+  const [restaurants, setRestaurants] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
 
-    useEffect(() => {
-        axios.get("http://localhost:3000/places")
-            .then((response) => {
-                console.log("API 응답 데이터:", response.data);  // ✅ 디버깅용 로그 추가
-                setRestaurants(response.data?.places || []);  // ✅ JSON 구조 맞춤
-            })
-            .catch((error) => {
-                console.error("맛집 데이터를 불러오는 중 오류:", error.response ? error.response.data : error.message);
-            });
-    }, []);
+  useEffect(() => {
+    fetchRestaurants().then((data) => setRestaurants(data));
 
-    return (
-        <div className="rest-list-container">
-            <h2>맛집 목록</h2>
-            <div className="rest-list">
-                {restaurants.length > 0 ? (
-                    restaurants.map((rest) => (
-                        <RestCard 
-                            key={rest.id} 
-                            name={rest.title}  // ✅ JSON에서 title 사용
-                            image={`http://localhost:3000/images/${rest.image.src}`}  // ✅ JSON에서 image.src 사용
-                        />
-                    ))
-                ) : (
-                    <p>맛집 데이터를 불러오는 중...</p>
-                )}
-            </div>
-        </div>
+    // 사용자의 현재 위치 가져오기
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        });
+      },
+      (error) => console.error("❌ 위치 정보 가져오기 실패:", error),
+      { enableHighAccuracy: true }
     );
-};
+  }, []);
+
+  // 거리 계산 함수 (Haversine 공식 사용)
+  const getDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // 지구 반지름 (단위: km)
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+  };
+
+  // 사용자 위치가 있다면 거리순 정렬
+  const sortedRestaurants = userLocation
+    ? [...restaurants].sort((a, b) => 
+        getDistance(userLocation.lat, userLocation.lon, a.lat, a.lon) -
+        getDistance(userLocation.lat, userLocation.lon, b.lat, b.lon)
+      )
+    : restaurants;
+
+  return (
+    <div className="restaurant-list">
+      {sortedRestaurants.map(rest => (
+        <RestCard key={rest.id} restaurant={rest} onFavorite={onAddFavorite} />
+      ))}
+    </div>
+  );
+}
 
 export default RestList;
